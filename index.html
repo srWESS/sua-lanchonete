@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lanchonete Gourmet - O Ponto do Sabor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- Banner Animado de Entrega -->
+    <div class="delivery-banner sticky top-0 z-[60] shadow-md">
+        <div class="animation-wrapper">
+            <span class="truck-icon">🛵</span>
+            <div class="delivery-text-container">
+                🚀 Entrega rápida de lanches quentinhos em até 40 min!
+            </div>
+        </div>
+    </div>
+
+    <!-- Navegação Principal -->
+    <nav class="bg-zinc-900 shadow-xl sticky top-[36px] sm:top-[42px] z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- Botão Menu Hambúrguer (Mobile) -->
+            <button onclick="toggleMobileMenu()" class="md:hidden text-white p-2 mr-2 hover:bg-white/10 rounded-lg transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+
+            <div class="flex items-center gap-2 cursor-pointer flex-1 md:flex-none" onclick="window.location.reload()">
+                <div class="bg-yellow-400 p-1.5 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-utensils"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+                </div>
+                <div class="leading-none">
+                    <span class="text-white font-brand text-xl font-bold block">Sua Lanchonete</span>
+                    <span class="text-yellow-400 text-[10px] uppercase tracking-widest font-bold">O Ponto do Sabor</span>
+                </div>
+            </div>
+
+            <!-- Barra de Busca (Desktop) -->
+            <div class="hidden md:flex flex-1 max-w-md mx-6 relative">
+                <input type="text" oninput="searchProducts(this.value)" class="search-input w-full bg-zinc-800 text-white rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-gray-400 text-sm" placeholder="O que vamos comer hoje?">
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-2.5 text-gray-400 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button id="cart-btn" class="relative p-2 text-white hover:text-yellow-400 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                    <span id="cart-count" class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-zinc-900">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Barra de Busca Mobile (Visível apenas em telas pequenas) -->
+    <div class="bg-white border-b sticky top-[92px] sm:top-[98px] z-40 p-3 md:hidden">
+        <div class="relative">
+            <input type="text" oninput="searchProducts(this.value)" class="search-input w-full bg-gray-100 text-gray-800 rounded-xl py-3 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-gray-500 font-medium text-sm" placeholder="O que vamos comer hoje?">
+            <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-3.5 text-gray-500 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+        </div>
+    </div>
+
+    <!-- Filtros de Categorias -->
+    <div class="bg-white border-b sticky top-[92px] sm:top-[98px] z-40 overflow-x-auto no-scrollbar hidden md:block">
+        <div class="container mx-auto px-4 py-3 flex gap-2 min-w-max justify-center">
+            <button class="filter-btn active px-6 py-2 rounded-full font-bold text-sm transition-all" data-category="todos">Todos</button>
+            <button class="filter-btn px-6 py-2 rounded-full font-bold text-sm transition-all" data-category="hamburgueres">Hambúrgueres</button>
+            <button class="filter-btn px-6 py-2 rounded-full font-bold text-sm transition-all" data-category="combos">Combos</button>
+            <button class="filter-btn px-6 py-2 rounded-full font-bold text-sm transition-all" data-category="porcoes">Porções</button>
+            <button class="filter-btn px-6 py-2 rounded-full font-bold text-sm transition-all" data-category="bebidas">Bebidas</button>
+            <button class="filter-btn px-6 py-2 rounded-full font-bold text-sm transition-all" data-category="sobremesas">Sobremesas</button>
+        </div>
+    </div>
+
+    <!-- Lista de Produtos -->
+    <main class="container mx-auto px-4 py-8">
+        <div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            <!-- Produtos inseridos via JS -->
+        </div>
+    </main>
+
+    <!-- Carrinho Lateral -->
+    <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full sm:w-[400px] bg-white shadow-2xl z-[100] transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="p-6 border-b flex justify-between items-center bg-zinc-900 text-white">
+            <button id="close-cart" class="text-yellow-400 hover:text-yellow-300 font-bold">Voltar</button>
+            <h2 class="text-xl font-bold uppercase font-brand tracking-tight">Seu Carrinho</h2>
+        </div>
+        
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
+            <!-- Itens do carrinho -->
+        </div>
+
+        <div class="p-6 border-t bg-gray-50">
+            <div class="flex justify-between items-center mb-6">
+                <span class="text-gray-600 font-medium">Total do Pedido:</span>
+                <span id="cart-total" class="text-2xl font-bold text-zinc-900">R$ 0,00</span>
+            </div>
+            <button id="checkout-btn" onclick="checkout()" class="w-full bg-yellow-400 py-4 rounded-xl font-bold uppercase hover:bg-yellow-500 transition-all active:scale-95 shadow-lg shadow-yellow-200">Finalizar Pedido</button>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes do Produto -->
+    <div id="product-modal" class="fixed inset-0 bg-black/60 z-[110] flex items-center justify-center p-4 hidden backdrop-blur-sm">
+        <div class="bg-white rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto relative shadow-2xl">
+            <button onclick="closeProductModal()" class="absolute top-4 right-4 z-10 bg-black/20 hover:bg-black/40 p-2 rounded-full text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+            <div class="h-64 sm:h-80 overflow-hidden bg-gray-100">
+                <img id="modal-image" src="" onerror="this.src='https://placehold.co/600x400?text=Sem+Imagem'" alt="" class="w-full h-full object-cover">
+            </div>
+            <div class="p-6 sm:p-8">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 id="modal-name" class="text-2xl font-bold text-zinc-900 leading-tight"></h3>
+                    <span id="modal-price" class="text-2xl font-bold text-yellow-600 whitespace-nowrap ml-4"></span>
+                </div>
+                <span id="modal-category" class="inline-block bg-zinc-100 text-zinc-600 text-[10px] font-bold px-2 py-1 rounded mb-4 tracking-widest"></span>
+                <p id="modal-description" class="text-gray-600 text-sm leading-relaxed mb-8"></p>
+                
+                <!-- Área de Personalização -->
+                <div id="modal-customization" class="mb-6 space-y-4 hidden max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                    <!-- Opções injetadas via JS -->
+                </div>
+
+                <div class="flex items-center justify-center gap-6 mb-8 bg-gray-50 py-3 rounded-2xl">
+                    <button onclick="adjustQtyModal(-1)" class="w-10 h-10 flex items-center justify-center bg-white rounded-lg shadow-sm font-bold text-zinc-900 hover:bg-gray-100 transition-colors">-</button>
+                    <input type="number" id="modal-qty" value="1" min="1" class="w-12 bg-transparent text-center font-bold text-lg outline-none" readonly>
+                    <button onclick="adjustQtyModal(1)" class="w-10 h-10 flex items-center justify-center bg-white rounded-lg shadow-sm font-bold text-zinc-900 hover:bg-gray-100 transition-colors">+</button>
+                </div>
+
+                <div class="flex gap-3">
+                    <button id="modal-back-btn" onclick="closeProductModal()" class="flex-1 bg-gray-200 text-gray-800 py-4 rounded-xl font-bold uppercase hover:bg-gray-300 transition-all active:scale-95">Voltar</button>
+                    <button id="modal-add-btn" onclick="addToCartFromModal()" class="flex-[2] bg-zinc-900 text-white py-4 rounded-xl font-bold uppercase hover:bg-yellow-400 hover:text-black transition-all active:scale-95 shadow-lg">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Mobile Lateral -->
+    <div id="mobile-menu-overlay" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black/50 z-[100] hidden backdrop-blur-sm transition-opacity"></div>
+    <div id="mobile-menu" class="fixed inset-y-0 left-0 w-[280px] bg-white z-[101] transform -translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
+        <div class="p-6 bg-zinc-900 text-white flex justify-between items-center">
+            <h3 class="font-brand font-bold text-xl uppercase">Menu</h3>
+            <button onclick="toggleMobileMenu()" class="p-2 hover:bg-white/10 rounded-full transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+        </div>
+        
+        <!-- Barra de Busca (Mobile) -->
+        <div class="p-4 border-b border-gray-100">
+            <div class="relative">
+                <input type="text" oninput="searchProducts(this.value)" class="search-input w-full bg-gray-100 text-gray-800 rounded-xl py-3 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-gray-500 font-medium" placeholder="O que vamos comer hoje?">
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-3.5 text-gray-500 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            </div>
+        </div>
+
+        <div class="p-4 space-y-2 overflow-y-auto flex-1">
+            <button class="mobile-filter-btn w-full text-left px-4 py-3 rounded-xl font-bold text-gray-700 hover:bg-gray-100 transition-colors flex items-center gap-3" data-category="todos">Todos</button>
+            <button class="mobile-filter-btn w-full text-left px-4 py-3 rounded-xl font-bold text-gray-700 hover:bg-gray-100 transition-colors flex items-center gap-3" data-category="hamburgueres">Hambúrgueres</button>
+            <button class="mobile-filter-btn w-full text-left px-4 py-3 rounded-xl font-bold text-gray-700 hover:bg-gray-100 transition-colors flex items-center gap-3" data-category="combos">Combos</button>
+            <button class="mobile-filter-btn w-full text-left px-4 py-3 rounded-xl font-bold text-gray-700 hover:bg-gray-100 transition-colors flex items-center gap-3" data-category="porcoes">Porções</button>
+            <button class="mobile-filter-btn w-full text-left px-4 py-3 rounded-xl font-bold text-gray-700 hover:bg-gray-100 transition-colors flex items-center gap-3" data-category="bebidas">Bebidas</button>
+            <button class="mobile-filter-btn w-full text-left px-4 py-3 rounded-xl font-bold text-gray-700 hover:bg-gray-100 transition-colors flex items-center gap-3" data-category="sobremesas">Sobremesas</button>
+        </div>
+    </div>
+
+    <div id="overlay" class="fixed inset-0 bg-black/40 z-[90] hidden transition-opacity duration-300"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
