@@ -27,7 +27,7 @@ function deleteCookie(name) {
 const products = [
     { id: 999, name: "Monte seu Lanche", price: 0.00, category: "hamburgueres", image: "monte-seu-lanche.jpg", description: "Crie seu hambúrguer perfeito escolhendo cada ingrediente." },
     { id: 1, name: "X-Bacon", price: 26.90, category: "hamburgueres", image: "x-bacon.png", description: "Hambúrguer artesanal, queijo, muito bacon crocante e salada." },
-    { id: 2, name: "X-Egg", price: 24.90, category: "hamburgueres", image: "x-Eagg.png", description: "Hambúrguer suculento, queijo, ovo frito no ponto e salada fresca." },
+    { id: 2, name: "X-Egg", price: 24.90, category: "hamburgueres", image: "x-eagg.png", description: "Hambúrguer suculento, queijo, ovo frito no ponto e salada fresca." },
     { id: 3, name: "X-Tudo", price: 32.90, category: "hamburgueres", image: "x-tudo.png", description: "O gigante: hambúrguer, bacon, ovo, presunto, queijo e salada completa." },
     { id: 4, name: "Hambúrguer Tradicional", price: 22.90, category: "hamburgueres", image: "tradicional.png", description: "O clássico saboroso com carne, queijo e salada." },
     { id: 5, name: "Misto de Frango", price: 16.90, category: "hamburgueres", image: "misto-frango.png", description: "Sanduíche natural com frango desfiado temperado." },
