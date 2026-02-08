@@ -286,7 +286,7 @@ const translations = {
         back: 'Voltar',
         emptyCart: 'Carrinho vazio',
         total: 'Total:',
-        purchaseDetails: 'Voltar',
+        purchaseDetails: 'Finalizar Pedido',
         addToCart: 'Adicionar ao Carrinho',
         addButton: 'Adicionar',
         contact: 'Contato',
@@ -318,7 +318,7 @@ const translations = {
         back: 'Back',
         emptyCart: 'Empty cart',
         total: 'Total:',
-        purchaseDetails: 'Back',
+        purchaseDetails: 'Checkout',
         addToCart: 'Add to Cart',
         addButton: 'Add',
         contact: 'Contact',
@@ -404,7 +404,7 @@ function updateLanguage() {
         totalLabel.textContent = t.total;
     }
 
-    const purchaseBtn = document.querySelector('#cart-sidebar button:last-child');
+    const purchaseBtn = document.getElementById('checkout-btn');
     if (purchaseBtn) {
         purchaseBtn.textContent = t.purchaseDetails;
     }
