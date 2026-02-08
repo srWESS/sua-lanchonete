@@ -79,6 +79,44 @@
         </div>
     </main>
 
+    <!-- Rodapé -->
+    <footer class="bg-zinc-900 text-white py-12 mt-12">
+        <div class="container mx-auto px-4">
+            <!-- Grid Layout: 3 colunas no desktop para centralização perfeita do meio -->
+            <div class="flex flex-col md:grid md:grid-cols-3 items-center gap-8">
+                
+                <!-- 1. Logotipo (Esquerda) -->
+                <div class="flex items-center gap-3 md:justify-start w-full">
+                    <div class="bg-yellow-400 p-2 rounded-lg text-zinc-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+                    </div>
+                    <div class="leading-none">
+                        <span class="font-brand text-2xl font-bold block text-white">SUA LANCHONETE</span>
+                        <span class="text-yellow-400 text-xs uppercase tracking-widest font-bold">O Ponto do Sabor</span>
+                    </div>
+                </div>
+
+                <!-- 2. Contato (Centro) -->
+                <div class="flex flex-col items-center w-full">
+                    <h3 class="text-xl font-brand font-bold uppercase mb-4 text-white tracking-wider">CONTATO</h3>
+                    <div class="flex gap-4">
+                        <a href="https://wa.me/5511991854713" target="_blank" class="bg-yellow-400 text-zinc-900 px-5 py-2 rounded-lg font-bold text-sm hover:bg-yellow-500 transition-colors shadow-lg">WhatsApp</a>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Avenida+Atlântica,+Jardim+Revista,+Suzano+-+SP,+519" target="_blank" class="bg-yellow-400 text-zinc-900 px-5 py-2 rounded-lg font-bold text-sm hover:bg-yellow-500 transition-colors shadow-lg">Localização</a>
+                        <a href="https://www.instagram.com/owess.92?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="bg-yellow-400 text-zinc-900 px-5 py-2 rounded-lg font-bold text-sm hover:bg-yellow-500 transition-colors shadow-lg">Instagram</a>
+                    </div>
+                </div>
+
+                <!-- 3. Espaço vazio (Direita) para equilibrar o grid no desktop -->
+                <div class="hidden md:block"></div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="border-t border-zinc-800 mt-10 pt-6 text-center">
+                <p class="text-gray-400 text-sm">© 2026 Sua Lanchonete. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
     <!-- Carrinho Lateral -->
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full sm:w-[400px] bg-white shadow-2xl z-[100] transform translate-x-full transition-transform duration-300 flex flex-col">
         <div class="p-6 border-b flex justify-between items-center bg-zinc-900 text-white">
