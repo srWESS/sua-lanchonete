@@ -132,6 +132,11 @@ function adjustCartQty(id, delta) {
 }
 
 function addToCart(id, customQty = null) {
+    if (id === 999) {
+        showProductDetail(id);
+        return;
+    }
+
     const product = products.find(p => p.id === id);
     const qtyInput = document.getElementById(`qty-${id}`);
     const quantity = customQty !== null ? customQty : parseInt(qtyInput.value);
@@ -194,7 +199,7 @@ function updateUI() {
 
     cartContainer.innerHTML = cart.map(item => `
         <div class="flex items-center gap-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm relative animate-in fade-in slide-in-from-right-4 duration-300">
-            <img src="${item.image}" onerror="this.src='https://placehold.co/100x100?text=No+Img'" class="w-16 h-16 object-cover rounded-xl shadow-sm">
+            <img src="${item.image}" onclick="editCartItem(${typeof item.id === 'string' ? "'" + item.id + "'" : item.id})" onerror="this.src='https://placehold.co/100x100?text=No+Img'" class="w-16 h-16 object-cover rounded-xl shadow-sm cursor-pointer hover:opacity-80 transition-opacity" title="Clique para editar">
             <div class="flex-grow">
                 <h5 class="text-[11px] font-bold text-gray-800 uppercase tracking-tight leading-tight mb-1">${item.name}</h5>
                 ${typeof item.id === 'string' ? `<p class="text-[10px] text-gray-500 leading-tight mb-2 line-clamp-2">${item.description}</p>` : ''}
@@ -543,6 +548,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Funções do modal de detalhes do produto
 let currentModalProductId = null;
+let editingCartItemId = null;
+
+function editCartItem(cartId) {
+    const cartItem = cart.find(i => i.id == cartId);
+    if (!cartItem) return;
+
+    let baseId = cartItem.id;
+    if (typeof cartItem.id === 'string' && cartItem.id.includes('-')) {
+        baseId = parseInt(cartItem.id.split('-')[0]);
+    } else {
+        baseId = parseInt(cartItem.id);
+    }
+
+    const product = products.find(p => p.id === baseId);
+    if (!product) return;
+
+    editingCartItemId = cartId;
+    currentModalProductId = baseId;
+
+    document.getElementById('modal-image').src = product.image;
+    document.getElementById('modal-name').textContent = product.name;
+    document.getElementById('modal-description').textContent = product.description;
+    document.getElementById('modal-category').textContent = product.category.toUpperCase();
+    document.getElementById('modal-qty').value = cartItem.quantity;
+
+    renderCustomizationOptions(product);
+
+    if (cartItem.addons && cartItem.addons.length > 0) {
+        const inputs = document.querySelectorAll('#modal-customization input');
+        inputs.forEach(input => {
+            const name = input.getAttribute('data-name');
+            if (cartItem.addons.some(addon => addon.name === name)) {
+                input.checked = true;
+            }
+        });
+    }
+
+    updateModalTotal();
+
+    const btn = document.getElementById('modal-add-btn');
+    btn.textContent = "Salvar Alterações";
+
+    document.getElementById('product-modal').classList.remove('hidden');
+    toggleCart();
+}
 
 function showProductDetail(id) {
     const product = products.find(p => p.id === id);
@@ -566,6 +616,11 @@ function showProductDetail(id) {
 function closeProductModal() {
     document.getElementById('product-modal').classList.add('hidden');
     currentModalProductId = null;
+    editingCartItemId = null;
+    
+    const t = translations[currentLanguage];
+    const btn = document.getElementById('modal-add-btn');
+    if (btn) btn.textContent = t ? t.addToCart : 'Adicionar ao Carrinho';
 }
 
 function adjustQtyModal(delta) {
@@ -595,7 +650,67 @@ function updateModalTotal() {
     document.getElementById('modal-price').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
 }
 
+function saveEditedCartItem() {
+    const cartItemIndex = cart.findIndex(i => i.id == editingCartItemId);
+    if (cartItemIndex === -1) return;
+
+    const product = products.find(p => p.id === currentModalProductId);
+    
+    if (currentModalProductId === 999) {
+        const bread = document.querySelector('input[name="bread"]:checked');
+        const burger = document.querySelector('input[name="burger"]:checked');
+        if (!bread || !burger) {
+            alert('Por favor, selecione o Pão e a Carne.');
+            return;
+        }
+    }
+
+    const qty = parseInt(document.getElementById('modal-qty').value);
+
+    const selectedExtras = [];
+    let extrasPrice = 0;
+    const inputs = document.querySelectorAll('#modal-customization input:checked');
+    
+    inputs.forEach(input => {
+        const name = input.getAttribute('data-name');
+        const price = parseFloat(input.getAttribute('data-price'));
+        selectedExtras.push({ name, price });
+        extrasPrice += price;
+    });
+
+    let customName = product.name;
+    let customDesc = product.description;
+
+    if (currentModalProductId === 999) {
+        customDesc = selectedExtras.map(e => e.name).join(', ');
+    } else {
+        if (selectedExtras.length > 0) {
+            customName += " (Personalizado)";
+            customDesc += ` + ${selectedExtras.map(e => e.name).join(', ')}`;
+        }
+    }
+
+    cart[cartItemIndex] = {
+        ...cart[cartItemIndex],
+        name: customName,
+        price: product.price + extrasPrice,
+        description: customDesc,
+        quantity: qty,
+        addons: selectedExtras
+    };
+
+    updateUI();
+    saveCartToStorage();
+    closeProductModal();
+    toggleCart();
+}
+
 function addToCartFromModal() {
+    if (editingCartItemId) {
+        saveEditedCartItem();
+        return;
+    }
+
     if (!currentModalProductId) return;
 
     const qty = parseInt(document.getElementById('modal-qty').value);

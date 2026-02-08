@@ -539,10 +539,11 @@ function handleCheckout(event) {
                 `${t.orderLabel}\n` +
                 cart.map(i => {
                     let itemName = i.name.replace(" (Personalizado)", "");
-                    let itemText = `* ${i.quantity}x ${itemName} - R$ ${(i.price * i.quantity).toFixed(2).replace('.', ',')}`;
+                    let itemText = `*${i.quantity}x ${itemName}* - R$ ${(i.price * i.quantity).toFixed(2).replace('.', ',')}`;
 
                     if (i.addons && i.addons.length > 0) {
-                        itemText += `\nAdicionais:`;
+                        const isMonteSeuLanche = String(i.id).startsWith('999') || itemName === 'Monte seu Lanche';
+                        itemText += `\n${isMonteSeuLanche ? 'Ingredientes' : 'Adicionais'}:`;
                         i.addons.forEach(addon => {
                             const priceStr = addon.price > 0 ? ` + R$ ${addon.price.toFixed(2).replace('.', ',')}` : '';
                             itemText += `\n- ${addon.name}${priceStr}`;
